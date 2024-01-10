@@ -10,7 +10,7 @@
 <p align="left">
   <img src="https://github.com/eltry42/FoodFetch/assets/123928691/0c71fd8b-eebb-4c8f-99e0-1aafb7649011" width="320">
 &nbsp; &nbsp; &nbsp; &nbsp;
-  <img src="https://github.com/eltry42/FoodFetch/assets/123928691/b7a1ff3f-6c35-4d1c-bb85-ea8ae2bfd6e4" width="300">   
+  <img src="Images/Card Swiping.png" width="300">   
 &nbsp; &nbsp; &nbsp; &nbsp;
 </p>  
 <img src="https://github.com/eltry42/FoodFetch/assets/123928691/7b333e3b-e6a7-47a5-8931-f8c84f09a8de" width="300">   
