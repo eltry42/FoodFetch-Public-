@@ -13,10 +13,15 @@ import { IconButton } from "react-native-paper";
 import { CheckBox, SearchBar } from "react-native-elements";
 import { Octicons } from "@expo/vector-icons";
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from "react-native-maps";
-import { SCREEN_HEIGHT, SCREEN_WIDTH, TouchableOpacity } from "@gorhom/bottom-sheet";
+import {
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  TouchableOpacity,
+} from "@gorhom/bottom-sheet";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import key from "../../constants/secret";
-
+import { Btn } from "../../components/Btn/ApplyChangesFilter";
+import _ from 'lodash';
 
 class FilterModal extends Component {
   api_key = key;
@@ -38,14 +43,6 @@ class FilterModal extends Component {
   updateSearch = (location) => {
     this.setState({ searchQuery: location });
   };
-
-  pressFirstSuggestion = () => {
-    console.log("300")
-    // if (googlePlacesRef.current) {
-    //   googlePlacesRef.current.triggerSuggestionClicked(0); // Triggering the first suggestion
-    // }
-  };
-
   searchLocation = async (location) => {
     const { searchQuery } = this.state;
     const formattedAddress = encodeURIComponent(location);
@@ -56,7 +53,7 @@ class FilterModal extends Component {
       );
 
       if (!response.ok) {
-        console.log("2")
+        //console.log("2");
         Alert.alert("Error", "Network Error");
       }
 
@@ -76,13 +73,12 @@ class FilterModal extends Component {
           this.state.region.latitude,
           this.state.region.longitude
         );
-        this.fetchPlaceName()
+        this.fetchPlaceName();
       } else {
         Alert.alert("Error", "No results found");
       }
     } catch (error) {
       Alert.alert("Error", "Network Error");
-      
     }
   };
 
@@ -104,6 +100,23 @@ class FilterModal extends Component {
     }
   };
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps.visible && this.props.visible) {
+      this.handleOpen();
+    }
+  }
+
+  handleOpen = () => {
+    this.tempState = _.cloneDeep(this.props.state);
+    console.log(this.tempState.radius)
+  };
+
+  handleClose = () => {
+    console.log(this.tempState.radius)
+    this.props.revertState(_.cloneDeep(this.tempState));
+    this.props.onClose();
+  };
+
   render() {
     const { searchQuery, region, markerCoordinates, placeName } = this.state;
 
@@ -120,18 +133,30 @@ class FilterModal extends Component {
           onRequestClose={this.props.onClose}
           items
         >
+          <View style={styles.narrowSearchContainer}>
+            <Text style={styles.narrowSearchText}>Narrow your search</Text>
+            <View style={styles.line}></View>
+            <IconButton
+              style={styles.iconbutton}
+              icon={() => <Octicons name="x" size={29} color="black" />}
+              onPress={() => {
+                this.props.onClose();
+                this.handleClose();
+              }}
+            />
+          </View>
           <ScrollView
             bounces={false}
             style={{ flex: 1 }}
             contentContainerStyle={{
               flexGrow: 1,
-              paddingVertical: 0.08 * SCREEN_HEIGHT,
-              paddingBottom: 0.2 * SCREEN_HEIGHT, //gap between all items in scrollview and bottom of scrollview
+              paddingVertical: 0.0 * SCREEN_HEIGHT,
+              paddingBottom: 0.1 * SCREEN_HEIGHT, //gap between all items in scrollview and bottom of scrollview
             }}
           >
             <View style={styles.scrollview}>
               {/* radius slider  */}
-              <Text>Radius: {this.props.radius.toFixed(1)}km</Text>
+              <Text style={{marginTop: 0.05*SCREEN_HEIGHT, fontSize: 15, textAlign: "left", fontWeight: '500'}}>Radius: {this.props.radius.toFixed(1)}km</Text>
               <Slider
                 style={styles.slider}
                 minimumValue={0}
@@ -139,55 +164,30 @@ class FilterModal extends Component {
                 value={this.props.radius}
                 onValueChange={this.props.handleRadiusChange}
                 step={0.1}
+                minimumTrackTintColor={"black"}
               />
 
               {/* keywords */}
               {/* <Text>Select Keywords:</Text> */}
-              {this.props.keywords.map((keyword) => (
-                <View key={keyword.id}>
-                  <Text>{keyword.txt}</Text>
-                  <CheckBox
-                    onPress={() => this.props.toggleKeyword(keyword)}
-                    checked={keyword.isChecked}
-                  />
-                </View>
-              ))}
-
-
-              <View
-                style={{ height: 0.4 * SCREEN_HEIGHT, width: 1 * SCREEN_WIDTH, zindex: 100 }}
-              >
-                <GooglePlacesAutocomplete
-                  scrollEnabled={false}
-                  placeholder='Change location'
-                  value={searchQuery}
-                  onPress={(data, details = null) => {
-                    this.searchLocation(data.description);
-                    this.updateSearch(data.description);
-                  }}
-                  query={{
-                    key: key,
-                    language: 'en',
-                  }}
-                  fetchDetails={true}
-                  enablePoweredByContainer={false}
-                />
+              <View style={styles.keywordsContainer}>
+                {this.props.keywords.map((keyword, index) => (
+                  <View key={keyword.id} style={styles.keywordRow}>
+                    <View style={styles.keywordItem}>
+                      <Text>{keyword.txt}</Text>
+                    </View>
+                    <View style={styles.checkboxItem}>
+                      <CheckBox
+                        onPress={() => this.props.toggleKeyword(keyword)}
+                        checked={keyword.isChecked}
+                      />
+                    </View>
+                  </View>
+                ))}
               </View>
 
               <View
                 style={{ height: 0.4 * SCREEN_HEIGHT, width: 1 * SCREEN_WIDTH }}
               >
-                {/* SearchBar */}
-                {/* <SearchBar
-                  placeholder="Change location"
-                  onChangeText={this.updateSearch}
-                  onSubmitEditing={this.searchLocation}
-                  value={searchQuery}
-                  lightTheme={true}
-                  round={true}
-                  containerStyle={{ backgroundColor: "" }}
-                /> */}
-
                 {/* MapView */}
                 <MapView
                   style={{ flex: 1 }}
@@ -200,25 +200,49 @@ class FilterModal extends Component {
                   <Marker
                     coordinate={markerCoordinates} // Use marker coordinates
                     // title={placeName} seems to have some error in getting API
-                    // tooltip={true} 
+                    // tooltip={true}
                     // description="This is your specified location"
                   />
                 </MapView>
               </View>
 
-              {/* close 'X' button */}
-              <IconButton
-                style={styles.iconbutton}
-                icon={() => <Octicons name="x" size={27} color="black" />}
-                onPress={() => {
-                  this.props.resetloading();
-                  this.props.onClose();
-                  this.props.handleLocationChange(region.latitude, region.longitude);
-                  this.props.handleRestaurantSearch();
+              <View
+                style={{
+                  height: 0.4 * SCREEN_HEIGHT,
+                  width: 1 * SCREEN_WIDTH,
+                  zindex: 100,
                 }}
-              />
+              >
+                <GooglePlacesAutocomplete
+                  scrollEnabled={false}
+                  placeholder="Change location"
+                  value={searchQuery}
+                  onPress={(data, details = null) => {
+                    this.searchLocation(data.description);
+                    this.updateSearch(data.description);
+                  }}
+                  query={{
+                    key: key,
+                    language: "en",
+                  }}
+                  fetchDetails={true}
+                  enablePoweredByContainer={false}
+                />
+              </View>
             </View>
           </ScrollView>
+          <Btn
+            title={"Apply Changes"}
+            onPress={() => {
+              this.props.resetloading();
+              this.props.onClose();
+              this.props.handleLocationChange(
+                region.latitude,
+                region.longitude
+              );
+              this.props.handleRestaurantSearch();
+            }}
+          />
         </Modal>
       </View>
     );
@@ -226,29 +250,63 @@ class FilterModal extends Component {
 }
 
 const styles = StyleSheet.create({
-  // scrollviewContainer: {
-  //   flex: 1,
-  //   // justifyContent: 'flex-end', // This will push the content to the bottom
-  //   // paddingBottom: 100, // Adjust this value as needed for the distance from the bottom
-  // },
+  narrowSearchContainer: {
+    alignItems: "center",
+    flex: 0.17,
+    top: 0.03 * SCREEN_HEIGHT,
+  },
+  narrowSearchText: {
+    fontSize: 19,
+    fontWeight: "bold",
+    marginBottom: 5,
+    top: 0.05 * SCREEN_HEIGHT,
+    position: 'absolute'
+  },
+  line: {
+    width: "100%",
+    height: 0.5,
+    backgroundColor: "grey",
+    position: 'absolute',
+    top: 0.115*SCREEN_HEIGHT
+  },
+
+
   scrollview: {
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    // height : 0.5*SCREEN_HEIGHT
-    // maxHeight: 40
-    // bottom: 0.06*SCREEN_HEIGHT
   },
   iconbutton: {
     position: "absolute",
-    top: 0.01 * SCREEN_HEIGHT, // Adjust this value as needed for top spacing
-    left: 0.03 * SCREEN_HEIGHT, // Adjust this value as needed for left spacing
+    top: 0.035 * SCREEN_HEIGHT, // Adjust this value as needed for top spacing
+    left: 0.01 * SCREEN_HEIGHT, // Adjust this value as needed for left spacing
   },
 
   slider: {
-    width: 0.7 * SCREEN_WIDTH,
+    width: 0.85 * SCREEN_WIDTH,
     height: 0.09 * SCREEN_HEIGHT,
+  },
+
+  keywordsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  keywordRow: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    width: '45%', // Adjust to 30% to have 3 items per row
+  },
+  keywordItem: {
+    flex: 1,
+  },
+  checkboxItem: {
+    marginLeft: 0,
   },
 });
 

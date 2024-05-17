@@ -63,38 +63,50 @@ class Match extends Component {
 
   render() {
     const { state } = this.context;
-
+  
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.rowContainer}>
-          {state.selectedCards.map((card, index) => (
-            <View
-            style={[
-                  styles.card,
-                  { marginTop: (index === 0 || index === 1) ? 0.08 * SCREEN_HEIGHT : 0.04 * SCREEN_HEIGHT },
-                ]}
-              key={index}
-            >
-              {/* Image rendering */}
-              {card.photos.slice(0, 4).map((photo, photoIndex) => (
-                <Image
-                  key={photoIndex}
-                  source={{ uri: photo }}
-                  style={[
-                    styles.cardImage,
-                    {
-                      height: `${100 / card.photos.length}%`,
-                    },
-                  ]}
-                />
-              ))}
+          {state.selectedCards.map((card, index) => {
+            const isLengthOdd = state.selectedCards.length % 2 !== 0;
+            const marginBottomCondition = isLengthOdd
+              ? index >= state.selectedCards.length - 1
+              : index >= state.selectedCards.length - 2;
 
-              {/* Text Overlay */}
-              <View style={styles.textOverlay}>
-                <Text style={styles.cardTitle}>{card.name}</Text>
+            const marginBottom = marginBottomCondition ? 0.040 * SCREEN_HEIGHT : 0;
+
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.card,
+                  {
+                    marginTop: (index === 0 || index === 1) ? 0.08 * SCREEN_HEIGHT : 0.04 * SCREEN_HEIGHT,
+                    marginBottom: marginBottom,
+                  },
+                ]}
+              >
+                {/* Image rendering */}
+                {card.photos.slice(0, 4).map((photo, photoIndex) => (
+                  <Image
+                    key={photoIndex}
+                    source={{ uri: photo }}
+                    style={[
+                      styles.cardImage,
+                      {
+                        height: `${100 / card.photos.length}%`,
+                      },
+                    ]}
+                  />
+                ))}
+
+                {/* Text Overlay */}
+                <View style={styles.textOverlay}>
+                  <Text style={styles.cardTitle}>{card.name}</Text>
+                </View>
               </View>
-            </View>
-          ))}
+            );
+          })}
         </ScrollView>
       </GestureHandlerRootView>
     );
@@ -107,6 +119,7 @@ styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "flex-start", // To start from left
     alignContent: "flex-start", // To align items at the start of rows
+    marginBottom: 20
   },
   card: {
     backgroundColor: "white",
@@ -134,7 +147,7 @@ styles = StyleSheet.create({
   cardTitle: {
     padding: 0.005 * SCREEN_HEIGHT,
     fontWeight: "bold",
-    textAlign: "left",
+    textAlign: "centre",
     left: 0.03 * SCREEN_WIDTH,
     color: "white",
     fontSize: 0.05 * SCREEN_WIDTH,

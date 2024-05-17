@@ -10,7 +10,7 @@ const StateProvider = ({ children }) => {
     restaurantList: [],
     selectedKeywords: [],
     fetchCalls: [],
-    selectedcards: [],
+    //selectedcards: [],
     selectedCards: [],
     currentIndex: 0,
     animationComplete: true,

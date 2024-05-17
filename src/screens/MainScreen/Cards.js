@@ -311,50 +311,33 @@ class Cards extends Component {
 
 
     textOverlay: {
-      position: "absolute",
-      bottom: 0 * SCREEN_HEIGHT,
-      width: 0.96 * SCREEN_WIDTH, //same width as the card
-      backgroundColor: "rgba(0, 0, 0, 0.4)",
-      display: "flex",
+      flexDirection: 'row',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
+      width: 0.96 * SCREEN_WIDTH,
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      minHeight: 0.1 * SCREEN_HEIGHT,
     },
     cardTitle: {
+      flex: 1, // Take up remaining space
       padding: 0.005 * SCREEN_HEIGHT,
-      fontWeight: "bold",
-      textAlign: "left",
-      left: 0.03*SCREEN_WIDTH,
-      color: "white",
+      fontWeight: 'bold',
+      textAlign: 'left',
+      color: 'white',
       fontSize: 0.07 * SCREEN_WIDTH,
-      maxWidth: 0.96 * SCREEN_WIDTH
+      maxWidth: 0.8 * SCREEN_WIDTH, // Adjust the maximum width as needed
+      paddingLeft: 0.05 * SCREEN_WIDTH
     },
 
 
     mapButtonContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "left",
-      left: 0.15*SCREEN_WIDTH,
-      padding: 10,
-      borderRadius: 5,
-      marginTop: 10,
+      alignItems: 'flex-end', // Align the map icon to the right
+      paddingRight: 0.05*SCREEN_WIDTH, // Add padding to separate the map icon from the card title
     },
-    // mapButton: {
-    //   // backgroundColor: "#4285F4", // Google Maps color
-    //   flexDirection: "row",
-    //   alignItems: "center",
-    //   justifyContent: "center",
-    //   padding: 10,
-    //   borderRadius: 5,
-    //   marginTop: 10,
-    // },
-    // buttonText: {
-    //   color: "white",
-    //   fontSize: 16,
-    //   fontWeight: "bold",
-    //   marginRight: 10,
-    // },
     mapIcon: {
-      width: 0.08*SCREEN_WIDTH,
-      height: 0.05*SCREEN_HEIGHT,
+      width: 0.075 * SCREEN_WIDTH,
+      height: 0.045 * SCREEN_HEIGHT,
     },
   });
 }
