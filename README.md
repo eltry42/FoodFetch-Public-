@@ -1,6 +1,6 @@
 # FoodFetch
 
-#### FoodFetch, available on iOS and Android, is your go-to mobile app for exploring nearby restaurants, food courts, and cafes using an engaging card-swiping interface. Say goodbye to the daily struggle of choosing what to eat and break free from culinary monotony.
+#### FoodFetch is your go-to mobile app for exploring nearby restaurants, food courts, and cafes using an engaging card-swiping interface. Say goodbye to the daily struggle of choosing what to eat and break free from culinary monotony.
 
 ***
 
