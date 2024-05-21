@@ -36,6 +36,7 @@ class FilterModal extends Component {
       longitudeDelta: 0.03,
     },
     markerCoordinates: { latitude: this.props.lat, longitude: this.props.long },
+    tempArray: []
   };
 
   reverseGeocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.state.region.latitude},${this.state.region.longitude}&key=${this.api_key}`;
@@ -106,16 +107,20 @@ class FilterModal extends Component {
     }
   }
 
+  //updating radius and keyword to orginal state when "x" pressed instead of apply changes 
   handleOpen = () => {
     this.tempState = _.cloneDeep(this.props.state);
-    console.log(this.tempState.radius)
   };
 
   handleClose = () => {
-    console.log(this.tempState.radius)
-    this.props.revertState(_.cloneDeep(this.tempState));
+    this.props.revertState(this.tempState);
     this.props.onClose();
-  };
+    this.state.tempArray.forEach(keyword => {
+        this.props.toggleKeyword(keyword);
+    });
+};
+
+
 
   render() {
     const { searchQuery, region, markerCoordinates, placeName } = this.state;
@@ -134,14 +139,15 @@ class FilterModal extends Component {
           items
         >
           <View style={styles.narrowSearchContainer}>
-            <Text style={styles.narrowSearchText}>Narrow your search</Text>
+            <Text style={styles.narrowSearchText}>Narrow or Expand your search</Text>
             <View style={styles.line}></View>
             <IconButton
               style={styles.iconbutton}
               icon={() => <Octicons name="x" size={29} color="black" />}
               onPress={() => {
                 this.props.onClose();
-                this.handleClose();
+                this.handleClose();  //revert the radius slider to orginal since changes not applied
+                this.state.tempArray=[];
               }}
             />
           </View>
@@ -177,8 +183,14 @@ class FilterModal extends Component {
                     </View>
                     <View style={styles.checkboxItem}>
                       <CheckBox
-                        onPress={() => this.props.toggleKeyword(keyword)}
                         checked={keyword.isChecked}
+                        onPress={() => {
+                            // Assuming 'keyword' is accessible here
+                            let tempArray = [...this.state.tempArray]; // Make a copy of the temp array
+                            tempArray.push(keyword); // Add the keyword to the temporary array
+                            this.setState({ tempArray }); // Update the state with the new temporary array
+                            this.props.toggleKeyword(keyword);
+                        }}
                       />
                     </View>
                   </View>
