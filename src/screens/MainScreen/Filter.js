@@ -198,7 +198,7 @@ class FilterModal extends Component {
               </View>
 
               <View
-                style={{ height: 0.4 * SCREEN_HEIGHT, width: 1 * SCREEN_WIDTH }}
+                style={{ height: 0.3 * SCREEN_HEIGHT, width: 1 * SCREEN_WIDTH }}
               >
                 {/* MapView */}
                 <MapView
@@ -220,7 +220,7 @@ class FilterModal extends Component {
 
               <View
                 style={{
-                  height: 0.4 * SCREEN_HEIGHT,
+                  height: 0.35 * SCREEN_HEIGHT,
                   width: 1 * SCREEN_WIDTH,
                   zindex: 100,
                 }}
@@ -271,8 +271,9 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: "bold",
     marginBottom: 5,
-    top: 0.05 * SCREEN_HEIGHT,
-    position: 'absolute'
+    top: 0.053 * SCREEN_HEIGHT,
+    position: 'absolute',
+    left: 0.18 * SCREEN_WIDTH
   },
   line: {
     width: "100%",
@@ -303,22 +304,27 @@ const styles = StyleSheet.create({
   keywordsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    padding: 20,
+    padding: 0,
+    justifyContent: 'flex-start', // To start from the left
+    alignContent: 'flex-start', // To align items at the start of rows
+    marginTop: 0.04 * SCREEN_HEIGHT,
+    marginBottom: 0.03 * SCREEN_HEIGHT,
+    alignItems: 'center',
   },
   keywordRow: {
     flexDirection: 'row',
-    marginBottom: 10,
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    width: '45%', // Adjust to 30% to have 3 items per row
+    alignItems: 'center', // Ensure items are aligned in the center vertically
+    marginBottom: 0.01*SCREEN_HEIGHT,
+    marginTop: 0.01*SCREEN_HEIGHT,
+    marginLeft: 0.10*SCREEN_WIDTH,
+    width: '36%', 
   },
   keywordItem: {
-    flex: 1,
+    alignItems: 'center',
+    flex: 1, // Allow text to take up available space
   },
   checkboxItem: {
-    marginLeft: 0,
+    marginLeft: 0, // Add some space between the text and the checkbox
   },
 });
 
