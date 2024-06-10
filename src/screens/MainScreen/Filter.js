@@ -7,10 +7,11 @@ import {
   StyleSheet,
   Button,
   Alert,
+  ViewStyle
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { IconButton } from "react-native-paper";
-import { CheckBox, SearchBar } from "react-native-elements";
+import RNCheckboxCard from "react-native-checkbox-card";
 import { Octicons } from "@expo/vector-icons";
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from "react-native-maps";
 import {
@@ -118,12 +119,27 @@ class FilterModal extends Component {
     this.state.tempArray.forEach(keyword => {
         this.props.toggleKeyword(keyword);
     });
-};
-
-
+  };
 
   render() {
     const { searchQuery, region, markerCoordinates, placeName } = this.state;
+
+    const emojiMap = {
+      "cafe": '𓍢ִ໋☕️✧˚ ༘ ⋆',
+      "fast food": '༼ つ ◕_◕ ༽つ🍰🍔🍟',
+      "food court": '🍜🍚',
+      "chinese": '🥡🥢',
+      "japanese": '🍣🍡',
+      "korean": '🍱🇰🇷',
+      "italian": '🍝🍕',
+      "mexican": '🌮',
+      "western": '🥩😋',
+      "thai": '🍍🙏',
+      "vegetarian": '˚˖𓍢ִ໋🍃✧˚.🥗⋆',
+      "vegan": '🌿: ^🥬',
+      "halal": '✩₊˚.⋆☾⋆⁺₊✧',
+    };
+    
 
     return (
       <View>
@@ -139,7 +155,7 @@ class FilterModal extends Component {
           items
         >
           <View style={styles.narrowSearchContainer}>
-            <Text style={styles.narrowSearchText}>Narrow or Expand your search</Text>
+            <Text style={styles.narrowSearchText}> Narrow or Expand your search  🔍</Text>
             <View style={styles.line}></View>
             <IconButton
               style={styles.iconbutton}
@@ -176,25 +192,31 @@ class FilterModal extends Component {
               {/* keywords */}
               {/* <Text>Select Keywords:</Text> */}
               <View style={styles.keywordsContainer}>
-                {this.props.keywords.map((keyword, index) => (
-                  <View key={keyword.id} style={styles.keywordRow}>
-                    <View style={styles.keywordItem}>
-                      <Text>{keyword.txt}</Text>
-                    </View>
-                    <View style={styles.checkboxItem}>
-                      <CheckBox
-                        checked={keyword.isChecked}
+                {this.props.keywords.map((keyword, index) => {
+                  const emoji = emojiMap[keyword.txt] || '🔍';
+                  const keywordTextWithEmoji = `${keyword.txt}   ${emoji}`;
+                  
+                  return (
+                    <View key={index} style={{ marginBottom: 0.01 * SCREEN_HEIGHT }}>
+                      <RNCheckboxCard
+                        textStyle={styles.keywordText}
+                        borderRadius={0.015 * SCREEN_HEIGHT}
+                        text={keywordTextWithEmoji}
+                        height={0.05 * SCREEN_HEIGHT}
+                        isChecked={keyword.isChecked}
+                        circleBackgroundColor="#d3d3d3"
+                        width={0.9 * SCREEN_WIDTH}
                         onPress={() => {
-                            // Assuming 'keyword' is accessible here
-                            let tempArray = [...this.state.tempArray]; // Make a copy of the temp array
-                            tempArray.push(keyword); // Add the keyword to the temporary array
-                            this.setState({ tempArray }); // Update the state with the new temporary array
-                            this.props.toggleKeyword(keyword);
+                          // Assuming 'keyword' is accessible here
+                          let tempArray = [...this.state.tempArray]; // Make a copy of the temp array
+                          tempArray.push(keyword); // Add the keyword to the temporary array
+                          this.setState({ tempArray }); // Update the state with the new temporary array
+                          this.props.toggleKeyword(keyword);
                         }}
                       />
                     </View>
-                  </View>
-                ))}
+                  );
+                })}
               </View>
 
               <View
@@ -268,7 +290,7 @@ const styles = StyleSheet.create({
     top: 0.03 * SCREEN_HEIGHT,
   },
   narrowSearchText: {
-    fontSize: 19,
+    fontSize: 0.021*SCREEN_HEIGHT,
     fontWeight: "bold",
     marginBottom: 5,
     top: 0.053 * SCREEN_HEIGHT,
@@ -285,7 +307,7 @@ const styles = StyleSheet.create({
 
 
   scrollview: {
-    backgroundColor: "white",
+    backgroundColor: "#F8F8F8",
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
@@ -296,10 +318,12 @@ const styles = StyleSheet.create({
     left: 0.01 * SCREEN_HEIGHT, // Adjust this value as needed for left spacing
   },
 
+
   slider: {
     width: 0.85 * SCREEN_WIDTH,
     height: 0.09 * SCREEN_HEIGHT,
   },
+
 
   keywordsContainer: {
     flexDirection: 'row',
@@ -316,14 +340,21 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Ensure items are aligned in the center vertically
     marginBottom: 0.01*SCREEN_HEIGHT,
     marginTop: 0.01*SCREEN_HEIGHT,
-    marginLeft: 0.10*SCREEN_WIDTH,
-    width: '36%', 
+    marginLeft: 0.043*SCREEN_WIDTH,
+    width: '40%', 
   },
   keywordItem: {
     alignItems: 'center',
     flex: 1, // Allow text to take up available space
   },
+  keywordText: {
+    textTransform: 'uppercase',
+    fontSize: 0.016*SCREEN_HEIGHT,
+    fontWeight: "bold",
+    textDecorationLine: 'none',
+  },
   checkboxItem: {
+    fontWeight: "bold",
     marginLeft: 0, // Add some space between the text and the checkbox
   },
 });
