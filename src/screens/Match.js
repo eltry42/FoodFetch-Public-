@@ -15,7 +15,6 @@ import React, { Component } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import StateContext from "../states/StateContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScreenHeight } from "@rneui/base";
 
 class Match extends Component {
   static contextType = StateContext;

@@ -19,8 +19,9 @@ const StateProvider = ({ children }) => {
     showLoading : true,
     radius: 0.5
   });
+
   return (
-    <StateContext.Provider value={{ state, setState }}>
+    <StateContext.Provider value={{ state, setState,}}>
       {children}
     </StateContext.Provider>
   );
