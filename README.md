@@ -10,7 +10,7 @@
 <p align="left">
   <img src="Images/First Look.png" width="320">
 &nbsp; &nbsp; &nbsp; &nbsp;
-  <img src="Images/Card Swiping.png" width="325">   
+  <img src="Images/Card Swiping.png" width="335">   
 &nbsp; &nbsp; &nbsp; &nbsp;
 </p>  
 <img src="Images/Restaurants location from google maps.png" width="300">   
